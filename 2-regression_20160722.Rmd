@@ -1,0 +1,53 @@
+---
+title: "chap2. regression"
+author: "joanna"
+date: "2016년 7월 22일"
+output: html_document
+---
+
+```{r}
+
+####################################
+# 2장. 선형회귀 - 난방비
+# 6/28일
+####################################
+
+setwd("D:\\Rdataset")
+
+rd<-read.csv("난방비.csv", header=T)
+head(rd)
+
+gfit=lm(난방비~., data=rd)
+
+library(stats)
+anova(gfit)
+summary(gfit)
+
+```
+
+```{r}
+
+####################################
+# 2장. 로지스틱회귀귀 - 림프절
+# 6/28일
+####################################
+
+library(boot)
+data(nodal)
+head(nodal)
+nodal_rd<-nodal[,-1]
+head(nodal_rd)
+summary(nodal_rd)
+plot(nodal_rd)
+
+# install.packages("sqldf")
+library(sqldf)
+r_nm<-as.vector(sqldf("select r, count(1) as nm from nodal_rd group by 1"))
+barplot(r_nm$nm, names.arg=r_nm$r, horiz=TRUE, las=1, xlim=c(0,50), main="nodal's R variable frequency")
+
+aged_nm<-as.vector(sqldf("select aged, count(1) as nm from nodal_rd group by 1"))
+barplot(aged_nm$nm, names.arg=aged_nm$aged, horiz=TRUE, las=1, xlim=c(0,50), main="nodal's aged variable frequency")
+
+gfit=glm(r~., data=nodal_rd, family="binomial")
+summary(gfit)
+```
